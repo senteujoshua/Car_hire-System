@@ -1,116 +1,161 @@
-const navElement = document.querySelector("nav");
+const cardData = [
+  {
+    imageName: "images.jpeg",
+    carName: "Audi RSQ8",
+    model: "2024 Model XYZ",
+    description:
+      "Experience the future of driving with our latest model, the 2024 XYZ. This sleek and powerful car is designed to provide a thrilling driving experience.",
+    link: "3D_car.html",
+  },
+  {
+    imageName: "images.jpeg",
+    carName: "Tesla Model S",
+    model: "2024 Model ABC",
+    description:
+      "Discover the innovation and sustainability of the 2024 Model ABC. This electric car redefines the driving experience with cutting-edge technology.",
+    link: "3D_car.html",
+  },
+  {
+    imageName: "images.jpeg",
+    carName: "BMW M5",
+    model: "2024 Model DEF",
+    description:
+      "Feel the power and elegance of the 2024 Model DEF. This high-performance vehicle combines luxury with thrilling driving dynamics.",
+    link: "3D_car.html",
+  },
+  {
+    imageName: "images.jpeg",
+    carName: "Mercedes-Benz AMG GT",
+    model: "2024 Model GHI",
+    description:
+      "Experience the perfect blend of style and performance with the 2024 Model GHI. This iconic sports car sets new standards in automotive design.",
+    link: "3D_car.html",
+  },
+  {
+    imageName: "images.jpeg",
+    carName: "Porsche 911",
+    model: "2024 Model JKL",
+    description:
+      "Unleash the thrill of driving with the 2024 Model JKL. This classic sports car offers a timeless design and exhilarating performance.",
+    link: "3D_car.html",
+  },
+];
 
-const activeElement = document.createElement("div");
-activeElement.classList.add("active-element");
+// add event dom content loaded to load the javascript after the html is completetly loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const navElement = document.querySelector("nav");
 
-const getOffsetLeft = (element) => {
-  const elementRect = element.getBoundingClientRect();
+  const activeElement = document.createElement("div");
+  activeElement.classList.add("active-element");
 
-  return (
-    elementRect.left -
-    navElement.getBoundingClientRect().left +
-    (elementRect.width - activeElement.offsetWidth) / 2
-  );
-};
+  const getOffsetLeft = (element) => {
+    const elementRect = element.getBoundingClientRect();
 
-navElement.appendChild(activeElement);
+    return (
+      elementRect.left -
+      navElement.getBoundingClientRect().left +
+      (elementRect.width - activeElement.offsetWidth) / 2
+    );
+  };
 
-const activeButton = navElement.querySelector("ul li.active button");
+  navElement.appendChild(activeElement);
 
-document.fonts.ready.then(() => {
-  gsap.set(activeElement, {
-    x: getOffsetLeft(activeButton),
-  });
-  gsap.to(activeElement, {
-    "--active-element-show": "1",
-    duration: 0.2,
-  });
-});
+  const activeButton = navElement.querySelector("ul li.active button");
 
-navElement.querySelectorAll("ul li button").forEach((button, index) => {
-  button.addEventListener("click", () => {
-    const active = navElement.querySelector("ul li.active");
-    const oldIndex = [...active.parentElement.children].indexOf(active);
-
-    if (
-      index === oldIndex ||
-      navElement.classList.contains("before") ||
-      navElement.classList.contains("after")
-    ) {
-      return;
-    }
-
-    const x = getOffsetLeft(button);
-    const direction = index > oldIndex ? "after" : "before";
-    const spacing = Math.abs(x - getOffsetLeft(active));
-
-    navElement.classList.add(direction);
-    active.classList.remove("active");
-    button.parentElement.classList.add("active");
-
+  document.fonts.ready.then(() => {
     gsap.set(activeElement, {
-      rotateY: direction === "before" ? "180deg" : "0deg",
+      x: getOffsetLeft(activeButton),
     });
-
     gsap.to(activeElement, {
-      keyframes: [
-        {
-          "--active-element-width": `${
-            spacing > navElement.offsetWidth - 60
-              ? navElement.offsetWidth - 60
-              : spacing
-          }px`,
-          duration: 0.3,
-          ease: "none",
-          onStart: () => {
-            createSVG(activeElement);
-
-            gsap.to(activeElement, {
-              "--active-element-opacity": 1,
-              duration: 0.1,
-            });
-          },
-        },
-        {
-          "--active-element-scale-x": "0",
-          "--active-element-scale-y": ".25",
-          "--active-element-width": "0px",
-          duration: 0.3,
-          onStart: () => {
-            gsap.to(activeElement, {
-              "--active-element-mask-position": "40%",
-              duration: 0.5,
-            });
-            gsap.to(activeElement, {
-              "--active-element-opacity": 0,
-              delay: 0.45,
-              duration: 0.25,
-            });
-          },
-          onComplete: () => {
-            activeElement.innerHTML = "";
-            navElement.classList.remove("before", "after");
-            activeElement.removeAttribute("style");
-            gsap.set(activeElement, {
-              x: getOffsetLeft(button),
-              "--active-element-show": "1",
-            });
-          },
-        },
-      ],
-    });
-
-    gsap.to(activeElement, {
-      x,
-      "--active-element-strike-x": "-50%",
-      duration: 0.6,
-      ease: "none",
+      "--active-element-show": "1",
+      duration: 0.2,
     });
   });
-});
 
-const createSVG = (element) => {
-  element.innerHTML = `
+  navElement.querySelectorAll("ul li button").forEach((button, index) => {
+    button.addEventListener("click", () => {
+      const active = navElement.querySelector("ul li.active");
+      const oldIndex = [...active.parentElement.children].indexOf(active);
+
+      if (
+        index === oldIndex ||
+        navElement.classList.contains("before") ||
+        navElement.classList.contains("after")
+      ) {
+        return;
+      }
+
+      const x = getOffsetLeft(button);
+      const direction = index > oldIndex ? "after" : "before";
+      const spacing = Math.abs(x - getOffsetLeft(active));
+
+      navElement.classList.add(direction);
+      active.classList.remove("active");
+      button.parentElement.classList.add("active");
+
+      gsap.set(activeElement, {
+        rotateY: direction === "before" ? "180deg" : "0deg",
+      });
+
+      gsap.to(activeElement, {
+        keyframes: [
+          {
+            "--active-element-width": `${
+              spacing > navElement.offsetWidth - 60
+                ? navElement.offsetWidth - 60
+                : spacing
+            }px`,
+            duration: 0.3,
+            ease: "none",
+            onStart: () => {
+              createSVG(activeElement);
+
+              gsap.to(activeElement, {
+                "--active-element-opacity": 1,
+                duration: 0.1,
+              });
+            },
+          },
+          {
+            "--active-element-scale-x": "0",
+            "--active-element-scale-y": ".25",
+            "--active-element-width": "0px",
+            duration: 0.3,
+            onStart: () => {
+              gsap.to(activeElement, {
+                "--active-element-mask-position": "40%",
+                duration: 0.5,
+              });
+              gsap.to(activeElement, {
+                "--active-element-opacity": 0,
+                delay: 0.45,
+                duration: 0.25,
+              });
+            },
+            onComplete: () => {
+              activeElement.innerHTML = "";
+              navElement.classList.remove("before", "after");
+              activeElement.removeAttribute("style");
+              gsap.set(activeElement, {
+                x: getOffsetLeft(button),
+                "--active-element-show": "1",
+              });
+            },
+          },
+        ],
+      });
+
+      gsap.to(activeElement, {
+        x,
+        "--active-element-strike-x": "-50%",
+        duration: 0.6,
+        ease: "none",
+      });
+    });
+  });
+
+  const createSVG = (element) => {
+    element.innerHTML = `
 <svg viewBox="0 0 116 5" preserveAspectRatio="none" class="beam">
 <path d="M0.5 2.5L113 0.534929C114.099 0.515738 115 1.40113 115 2.5C115 3.59887 114.099 4.48426 113 4.46507L0.5 2.5Z" fill="url(#gradient-beam)"/>
 <defs>
@@ -137,75 +182,65 @@ const createSVG = (element) => {
 </svg>
 </div>
 `;
-};
+  };
+  const cardContainer = document.getElementById("card-holder");
 
-const cardData = [
-  {
-    heading: "car 1",
-    body: "this car number 1",
-  },
-  {
-    heading: "car 2",
-    body: "this car number 2",
-  },
-  {
-    heading: "car 3",
-    body: "this car number 3",
-  },
-  {
-    heading: "car 4",
-    body: "this car number 4",
-  },
-  {
-    heading: "car 5",
-    body: "this car number 5",
-  },
-  {
-    heading: "car 6",
-    body: "this car number 6",
-  },
-  {
-    heading: "car 7",
-    body: "this car number 7",
-  },
-  {
-    heading: "car 8",
-    body: "this car number 8",
-  },
-  {
-    heading: "car 9",
-    body: "this car number 9",
-  },
-  {
-    heading: "car 10",
-    body: "this car number 10",
-  },
-];
+  if (cardContainer) {
+    cardData.forEach((card) => {
+      //  create card
+      const cardDiv = document.createElement("div");
+      cardDiv.className = "card";
 
-const postContainer = document.querySelector(".card-holder");
+      // create image container
+      const imageContainer = document.createElement("div");
+      imageContainer.className = "image-container";
 
-const postMethods = () => {
-  cardData.forEach((postData) => {
-    const newPost = document.createElement("div");
-    newPost.classList.add("card");
-    newPost.innerHTML = `
-<div class="image-container">
-  <img src="./profile-photo.jpg" alt="Profile Photo">
-</div>
-<div class="content">
-  <h2 class="profile-name">${postData.heading}</h2>
-  <p class="job-title">Frontend Developer</p>
-  <p class="description">${postData.body}</p>
-</div>
-<div class="social-links">
-  <a class="instagram" href="animationlogin.html">
-    <button>Rent Now</button>
-  </a>
-</div>
-`;
-  });
-  postContainer.appendChild(newPost);
+      // create image
+      const image = document.createElement("img");
+      image.src = card.imageName;
+      image.alt = "Car Image";
 
-};
+      //apppend imaege
+      imageContainer.appendChild(image);
 
-postMethods();
+      // heading for cae name
+      const heading = document.createElement("h2");
+      heading.className = "car-name";
+      heading.textContent = card.carName;
+
+      // model of car
+      const model = document.createElement("p");
+      model.className = "model";
+      model.textContent = card.model;
+
+      // description of car
+      const description = document.createElement("p");
+      description.className = "description";
+      description.textContent = card.description;
+
+      // social link for car
+      const socialLinks = document.createElement("div");
+      socialLinks.className = "social-links";
+
+      // anchor tags
+      const anchor = document.createElement("a");
+      anchor.className = "instagram";
+      anchor.href = card.link;
+
+      // button
+      const button = document.createElement("button");
+      button.className = "RentNow-btn";
+      button.textContent = "Rent Now";
+
+      // append all the elements
+      anchor.appendChild(button);
+      socialLinks.appendChild(anchor);
+      cardDiv.appendChild(imageContainer);
+      cardDiv.appendChild(heading);
+      cardDiv.appendChild(model);
+      cardDiv.appendChild(description);
+      cardDiv.appendChild(socialLinks);
+      cardContainer.appendChild(cardDiv);
+    });
+  }
+});
